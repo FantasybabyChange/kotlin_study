@@ -1,14 +1,19 @@
 package com.fantasybaby.kotlin.learn.channel
 
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
-
+import kotlinx.coroutines.launch
 val channel = Channel<Int>()
-
-
-/*
-
-launch {
-    for (x in 1..5) channel.send(x * x)
+suspend fun receive(){
+     for (i in channel) {
+         println(i)
+     }
 }
-repeat(5) { println(channel.receive()) }
-println("Done!")*/
+suspend fun main() {
+
+    GlobalScope.launch {
+        for (x in 1..5) channel.send(x * x)
+    }
+    receive()
+    println("Done!")
+}

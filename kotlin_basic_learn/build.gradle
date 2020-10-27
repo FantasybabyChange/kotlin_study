@@ -13,11 +13,11 @@ ext {
     kotlincoroutine_version = "1.3.9"
 }
 dependencies {
-    /*  implementation group: 'com.google.protobuf', name: 'protobuf-java-util', version: "$protobuf_version"
-      implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: "$kotlin_version"*/
+    /*  implementation group: 'com.google.protobuf', name: 'protobuf-java-util', version: "$protobuf_version"*/
+      implementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jdk8', version: "$kotlin_version"
     implementation group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: "$kotlin_version"
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: "$kotlincoroutine_version"
     implementation group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-jdk8', version: "$kotlincoroutine_version"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
