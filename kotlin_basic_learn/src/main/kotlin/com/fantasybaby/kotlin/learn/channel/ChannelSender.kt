@@ -6,17 +6,20 @@ import kotlinx.coroutines.launch
 
 val channel = Channel<Int>()
 suspend fun receive() {
-//     for (i in channel) {
-//         println(i)
-//     }
-    while (true) {
-        val receive = channel.receive()
-        println("--$receive")
+    for (i in channel) {
+        println("received $i")
     }
+//    while (true) {
+//        val receive = channel.receive()
+//        println("--$receive")
+//    }
 }
 
-suspend fun send() {
-    for (x in 1..5) channel.send(x * x)
+suspend fun send(str :String) {
+    for (x in 1..5) {
+        println("$str send $x")
+        channel.send(x)
+    }
 }
 
 suspend fun main() {
@@ -24,13 +27,13 @@ suspend fun main() {
         receive()
     }
     GlobalScope.launch {
-        send()
+        send("first")
     }
     channel.send(60)
     println("Done!")
-    Thread.sleep(10000)
+//    Thread.sleep(10000)
     GlobalScope.launch {
-        send()
+        send("second")
     }
     Thread.sleep(10000)
 }

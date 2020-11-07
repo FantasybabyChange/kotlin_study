@@ -6,7 +6,9 @@ group 'com.fantasybaby'
 version '0.0.1-snapshot'
 
 repositories {
-    mavenCentral()
+    mavenLocal() //直接使用本地maven仓库
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
 }
 ext {
     kotlin_version = "1.4.0"
