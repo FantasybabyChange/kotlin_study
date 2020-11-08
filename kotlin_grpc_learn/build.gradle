@@ -72,7 +72,7 @@ protobuf {
     }
 
     generateProtoTasks {
-        def krotoConfig = file("krotoPlusConfig.asciipb") // Or .json, .yaml, .yml
+        def krotoConfig = file("krotoPlusConfig.ascilibp") // Or .json, .yaml, .yml
 
         all().each { task ->
             // Adding the config file to the task inputs lets UP-TO-DATE checks
@@ -84,7 +84,7 @@ protobuf {
                 coroutines{}
                 kroto {
                     outputSubDir = "java"
-                    option "ConfigPath=$krotoConfig"
+                    option "ConfigPath=krotoPlusConfig.ascilibp"
                 }
             }
         }
