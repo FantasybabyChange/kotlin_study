@@ -1,54 +1,91 @@
-plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.4.10"
-    id "com.google.protobuf" version "0.8.13"
-    id "idea"
-}
-kotlin {
-    sourceSets {
-        main.kotlin.srcDirs += 'src/main/kotlin'
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        jcenter { url "https://maven.aliyun.com/repository/public" }
+        mavenCentral()
+        jcenter()
     }
 }
+plugins {
+    id "idea"
+    id "org.jetbrains.kotlin.jvm" version "1.4.10"
+    id "com.google.protobuf" version "0.8.13"
+    id "com.github.marcoferrer.kroto-plus" version "0.6.1"
+
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += [
+                "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi"
+        ]
+    }
+}
+
 repositories {
     mavenLocal()
-    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
-    jcenter { url "https://maven.aliyun.com/repository/public" }
+//    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+//    jcenter { url "https://maven.aliyun.com/repository/public" }
     mavenCentral()
     jcenter()
 }
-ext{
-    protobuf_version="3.9.0"
-    krotoPlusVersion="0.5.0-RC"
-    coroutines_version="1.3.0"
-    grpc_version="1.23.0"
+ext {
+    protobuf_version = "3.9.0"
+    krotoplus_version = "0.5.0-RC"
+    coroutines_version = "1.3.0"
+    grpc_version = "1.23.0"
 }
-dependencies {  
+dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "com.github.marcoferrer.krotoplus:kroto-plus-coroutines:$krotoplus_version"
+    implementation "com.github.marcoferrer.krotoplus:kroto-plus-message:$krotoplus_version"
 
     implementation "com.google.protobuf:protobuf-java:$protobuf_version"
-    implementation "io.grpc:grpc-protobuf:$grpc_version"
-    implementation "io.grpc:grpc-stub:$grpc_version"
+    implementation "io.grpc:grpc-protobuf:${grpc_version}",
+            "io.grpc:grpc-stub:${grpc_version}",
+            "io.grpc:grpc-netty:${grpc_version}"
 }
 
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/kotlin/main")
+        testOutputDir = file("$buildDir/classes/kotlin/test")
+    }
+}
 
 protobuf {
-    protoc { 
+    protoc {
         artifact = "com.google.protobuf:protoc:$protobuf_version"
     }
-    
+
     plugins {
         grpc { artifact = "io.grpc:protoc-gen-grpc-java:$grpc_version" }
-        // coroutines {
-        //     artifact = "com.github.marcoferrer.krotoplus:protoc-gen-grpc-coroutines:$krotoplus_version:jvm8@jar"
-        // }
+        coroutines {
+            artifact = "com.github.marcoferrer.krotoplus:protoc-gen-grpc-coroutines:$krotoplus_version:jvm8@jar"
+        }
+        kroto {
+            artifact = "com.github.marcoferrer.krotoplus:protoc-gen-kroto-plus:$krotoplus_version:jvm8@jar"
+        }
     }
 
     generateProtoTasks {
+        def krotoConfig = file("krotoPlusConfig.asciipb") // Or .json, .yaml, .yml
+
         all().each { task ->
+            // Adding the config file to the task inputs lets UP-TO-DATE checks
+            // include changes to configuration
+            task.inputs.files krotoConfig
+
             task.plugins {
-                grpc {}
-                // coroutines {}
+                grpc{}
+                coroutines{}
+                kroto {
+                    outputSubDir = "java"
+//                    option "ConfigPath=$krotoConfig"
+                }
             }
         }
     }
