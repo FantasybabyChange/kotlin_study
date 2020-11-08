@@ -1,0 +1,17 @@
+syntax="proto3";
+package com.fantasybaby;
+
+service TestService{
+  rpc test(Req) returns(Resp){}
+}
+enum Tt{
+  T1 =0;
+  T2 = 1;
+}
+
+message Req{
+  string req=1;
+}
+message Resp{
+  string resp =1;
+}
