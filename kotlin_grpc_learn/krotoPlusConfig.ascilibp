@@ -1,12 +1,5 @@
-
 proto_builders {
     filter { exclude_path: "google/*" }
-    unwrap_builders: true
+    unwrap_builders: false
     use_dsl_markers: true
-}
-grpc_stub_exts {
-    support_coroutines: true
-}
-grpc_coroutines {
-
 }
